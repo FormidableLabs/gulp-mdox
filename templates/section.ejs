@@ -1,0 +1,16 @@
+### `<%= heading %>`
+<% tags.forEach(function (t) { -%>
+<% if (t.type === 'param') { -%>
+* **<%= t.name %>** (`<%= t.types.join('|') %>`) <%= t.description %>
+<% } else if (t.type === 'returns') { -%>
+* **_<%= t.type %>_** <%= t.string %>
+<% } -%>
+<% }); -%>
+
+<%= description.full.replace(/\s*$/g, "") -%>
+<% tags.forEach(function (t) { -%>
+<% if (t.type === 'see') { %>
+
+See: [<%= t.url %>](<%= t.url %>)
+<% } -%>
+<% }); %><%= "\n" %>

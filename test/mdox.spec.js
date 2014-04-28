@@ -4,7 +4,9 @@ var fs = require("fs"),
   expect = chai.expect,
 
   gutil = require("gulp-util"),
-  mdox = require("../mdox");
+  mdox = require("../mdox"),
+
+  expectedTest = fs.readFileSync(__dirname + "/expected/test.md").toString();
 
 describe("mdox", function () {
 
@@ -13,6 +15,7 @@ describe("mdox", function () {
       stream = mdox({
         name: "test.md"
       }),
+      count = 0,
       err;
 
     stream
@@ -20,9 +23,11 @@ describe("mdox", function () {
         err = err;
       })
       .on("data", function (file) {
+        count++;
+        expect(file.contents.toString()).to.equal(expectedTest);
+      })
+      .on("end", function (err) {
         expect(err).to.not.be.ok;
-        console.log("TODO HERE RESULTS", file.path);
-        console.log("TODO HERE RESULTS", file.contents.toString());
         done(err);
       })
       .end(new gutil.File({

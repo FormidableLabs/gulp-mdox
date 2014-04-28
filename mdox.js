@@ -1,24 +1,45 @@
 var fs = require("fs"),
   _ = require("lodash"),
   dox = require("dox"),
+  ejs = require("ejs"),
+
   es = require("event-stream"),
   gutil = require("gulp-util"),
   PluginError = gutil.PluginError,
-  PLUGIN_NAME = "gulp-mdox";
+  PLUGIN_NAME = "gulp-mdox",
+
+  tmplPath = __dirname + "/templates";
+
+// Read and process a single template.
+var _readTmpl = function (tmplPath) {
+  var text = fs.readFileSync(tmplPath)
+    .toString()
+    .replace(/^\s*|\s*$/g, "");
+
+  return ejs.compile(text);
+}
+
+// Get and compile templates.
+// **Note**: Extend to take template options in the future.
+var _getTmpl = _.memoize(function (name) {
+  console.log("TODO HERE GET TMPL CALLED");
+  return _.chain(["toc", "heading", "section"])
+    .map(function (name) {
+      // Convert to name, name.ujs compiled template pairs.
+      return [name, _readTmpl(tmplPath + "/" + name + ".ejs")];
+    })
+    .object()
+    .value();
+});
 
 /**
  * A section / function of documentation.
  *
  * @param {Object} obj Objectified underlying data.
  */
-var Section = function (data) {
+var Section = function (data, opts) {
   this.data = data;
-};
-
-Section.prototype.tmpl = {
-  toc:     _.template("toc"),
-  heading: _.template("heading"),
-  section: _.template("section")
+  this.tmpl = _getTmpl();
 };
 
 Section.prototype.isPublic = function () {
