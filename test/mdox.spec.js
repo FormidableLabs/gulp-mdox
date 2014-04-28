@@ -6,7 +6,14 @@ var fs = require("fs"),
   gutil = require("gulp-util"),
   mdox = require("../mdox"),
 
-  expectedTest = fs.readFileSync(__dirname + "/expected/test.md").toString();
+  _readFixture = function (name) {
+    return fs.readFileSync(__dirname + "/" + name).toString();
+  },
+
+  fixtureJs = _readFixture("fixtures/test.js"),
+  //fixtureExisting = _readFixture("fixtures/existing.md"),
+  expectedTest = _readFixture("expected/test.md");
+  //expectedExisting = _readFixture("expected/existing.md");
 
 describe("mdox", function () {
 
@@ -25,7 +32,7 @@ describe("mdox", function () {
         count++;
         expect(file.contents.toString()).to.equal("");
       })
-      .on("end", function (err) {
+      .on("end", function () {
         expect(err).to.not.be.ok;
         done(err);
       })
@@ -35,9 +42,8 @@ describe("mdox", function () {
       }));
   });
 
-  it("should JS to new file", function (done) {
-    var filePath = __dirname + "/fixtures/test.js",
-      stream = mdox({
+  it("should render JS to new file", function (done) {
+    var stream = mdox({
         name: "test.md"
       }),
       count = 0,
@@ -51,15 +57,37 @@ describe("mdox", function () {
         count++;
         expect(file.contents.toString()).to.equal(expectedTest);
       })
-      .on("end", function (err) {
+      .on("end", function () {
         expect(err).to.not.be.ok;
         done(err);
       })
       .end(new gutil.File({
-        path: filePath,
-        contents: fs.readFileSync(filePath)
+        contents: new Buffer(fixtureJs)
       }));
   });
 
-  it("should render JSDoc comments");
+  // it("should render JS to existing file", function (done) {
+  //   var stream = mdox({
+  //       src: __dirname + "/fixtures/existing.md",
+  //       name: "existing.md"
+  //     }),
+  //     count = 0,
+  //     err;
+
+  //   stream
+  //     .on("error", function (err) {
+  //       err = err;
+  //     })
+  //     .on("data", function (file) {
+  //       count++;
+  //       expect(file.contents.toString()).to.equal(expectedExisting);
+  //     })
+  //     .on("end", function (err) {
+  //       expect(err).to.not.be.ok;
+  //       done(err);
+  //     })
+  //     .end(new gutil.File({
+  //       contents: new Buffer(fixtureJs)
+  //     }));
+  // });
 });

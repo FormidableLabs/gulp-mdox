@@ -12,7 +12,20 @@ npm install --save-dev gulp-mdox
 
 ## Example - TODO
 
-## API - TODO (USE TOOL!!!)
+## API
+
+* [`exports(opts)`](#exports-opts-)
+
+### `exports(opts)`
+* **opts** (`Object`) Options
+* **opts.src** (`String`) Input source markdown file. (_optional_)
+* **opts.name** (`String`) Output file name.
+* **opts.start** (`String`) Start marker. (_optional_)
+* **opts.end** (`String`) End marker. (_optional-)
+
+JsDoc-to-Markdown plugin.
+
+Extract JsDoc comments and convert to Markdown.
 
 ## Other Tools
 

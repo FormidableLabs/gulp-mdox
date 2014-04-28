@@ -4,7 +4,8 @@
 var fs = require("fs"),
   gulp = require("gulp"),
   jshint = require("gulp-jshint"),
-  mocha = require("gulp-mocha");
+  mocha = require("gulp-mocha"),
+  mdox = require("./mdox");
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -40,6 +41,23 @@ gulp.task("test", function () {
     .pipe(mocha({
       reporter: "spec"
     }));
+});
+
+// ----------------------------------------------------------------------------
+// Docs
+// ----------------------------------------------------------------------------
+gulp.task("docs", function () {
+  gulp
+    .src([
+      "mdox.js"
+    ])
+    .pipe(mdox({
+      src: "./README.md",
+      name: "README.md",
+      start: "## API",
+      end: "## Other Tools"
+    }))
+    .pipe(gulp.dest("./"));
 });
 
 // ----------------------------------------------------------------------------

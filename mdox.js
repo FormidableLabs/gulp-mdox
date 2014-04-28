@@ -17,12 +17,11 @@ var _readTmpl = function (tmplPath) {
     .replace(/^\s*|\s*$/g, "");
 
   return ejs.compile(text);
-}
+};
 
 // Get and compile templates.
 // **Note**: Extend to take template options in the future.
-var _getTmpl = _.memoize(function (name) {
-  console.log("TODO HERE GET TMPL CALLED");
+var _getTmpl = _.memoize(function () {
   return _.chain(["toc", "heading", "section"])
     .map(function (name) {
       // Convert to name, name.ujs compiled template pairs.
@@ -37,7 +36,7 @@ var _getTmpl = _.memoize(function (name) {
  *
  * @param {Object} obj Objectified underlying data.
  */
-var Section = function (data, opts) {
+var Section = function (data) {
   this.data = data;
   this.tmpl = _getTmpl();
 };
@@ -51,7 +50,10 @@ Section.prototype.isPublic = function () {
 
 Section.prototype.heading = function () {
   var params = _.chain(this.data.tags)
-    .filter(function (t) { return t.type === "param"; })
+    // Limit to params without a `.` (like `opts.foo`).
+    .filter(function (t) {
+      return t.type === "param" && t.name.indexOf(".") === -1;
+    })
     .map(function (t) {
       var isOpt = t.description.indexOf("_optional_") !== -1;
       return isOpt ? "[" + t.name + "]" : t.name;
@@ -113,15 +115,15 @@ var _generateMdApi = function (obj) {
 };
 
 /**
- * ## `mdox`
+ * JsDoc-to-Markdown plugin.
  *
  * Extract JsDoc comments and convert to Markdown.
  *
  * @param {Object} opts       Options
- * @param {String} opts.src   Input source markdown file. (_optional)
  * @param {String} opts.name  Output file name.
- * @param {String} opts.start Start marker. (_optional)
- * @param {String} opts.end   Start marker. (_optional)
+ * @param {String} opts.src   Input source markdown file. (_optional_)
+ * @param {String} opts.start Start marker. (_optional_)
+ * @param {String} opts.end   End marker. (_optional_)
  * @api public
  */
 module.exports = function (opts) {
@@ -178,7 +180,7 @@ module.exports = function (opts) {
         .pipe(es.split("\n"))
         .pipe(es.through(function (line) {
           // Hit the start marker.
-          if (line === opts.startMarker) {
+          if (line === opts.start) {
             // Emit our line (it **is** included).
             this.emit("data", line);
 
@@ -190,7 +192,7 @@ module.exports = function (opts) {
           }
 
           // End marker.
-          if (line === opts.endMarker) {
+          if (line === opts.end) {
             // Mark that we have **exited** API section.
             inApiSection = false;
           }
