@@ -6,9 +6,6 @@ var fs = require("fs"),
   PluginError = gutil.PluginError,
   PLUGIN_NAME = "gulp-mdox";
 
-// ----------------------------------------------------------------------------
-// Section
-// ----------------------------------------------------------------------------
 /**
  * A section / function of documentation.
  *
@@ -68,10 +65,9 @@ Section.prototype.renderSection = function () {
   }, this.data));
 };
 
-// ----------------------------------------------------------------------------
-// Helpers
-// ----------------------------------------------------------------------------
-// Generate Markdown API snippets from dox object.
+/**
+ * Generate MD API from `dox` object.
+ */
 var _generateMdApi = function (obj) {
   var toc = [];
 
@@ -90,24 +86,32 @@ var _generateMdApi = function (obj) {
   return "\n" + toc.join("") + "\n" + sections;
 };
 
-// ----------------------------------------------------------------------------
-// Task
-// ----------------------------------------------------------------------------
+/**
+ * ## `mdox`
+ *
+ * Extract JsDoc comments and convert to Markdown.
+ *
+ * @param {Object} opts       Options
+ * @param {String} opts.src   Input source markdown file. (_optional)
+ * @param {String} opts.name  Output file name.
+ * @param {String} opts.start Start marker. (_optional)
+ * @param {String} opts.end   Start marker. (_optional)
+ * @api public
+ */
 module.exports = function (opts) {
   // Set up options.
   opts = _.extend({
-    startMarker: null,
-    endMarker: null
+    src: null,
+    start: null,
+    end: null
   }, opts);
 
   // Validate.
-  if (!opts.src || !opts.startMarker || !opts.endMarker) {
-    throw new PluginError(PLUGIN_NAME, "Source and markers required");
+  if (!opts.name) {
+    throw new PluginError(PLUGIN_NAME, "Name is required");
   }
 
-  // --------------------------------------------------------------------------
-  // Stream: JS Sources
-  // --------------------------------------------------------------------------
+  // Convert object.
   var convert = {
     // Internal buffer
     _buffer: [],
@@ -127,9 +131,14 @@ module.exports = function (opts) {
       var data = dox.parseComments(convert._buffer.toString(), { raw: true });
       var mdApi = _generateMdApi(data);
 
+      // Just use MD straight up if no destination insertion.
+      var contents = opts.src ?
+        convert.insertTextStream(mdApi) :
+        new Buffer(mdApi);
+
       this.emit("data", new gutil.File({
-        path: opts.src,
-        contents: convert.insertTextStream(mdApi)
+        path: opts.name,
+        contents: contents
       }));
 
       this.emit("end");
