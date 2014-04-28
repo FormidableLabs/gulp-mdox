@@ -1,6 +1,6 @@
 # [gulp](https://github.com/gulpjs/gulp)-mdox [![Build Status](https://secure.travis-ci.org/FormidableLabs/gulp-mdox.png?branch=master)](http://travis-ci.org/FormidableLabs/gulp-mdox)
 
-> Convert JavaScript doc comments (jsdoc) to Markdown.
+> Convert JsDoc comments to Markdown.
 
 ## Install
 
