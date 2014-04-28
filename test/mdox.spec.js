@@ -66,7 +66,7 @@ describe("mdox", function () {
       }));
   });
 
-  it.skip("should render JS to existing file", function (done) {
+  it("should render JS to existing file", function (done) {
     var stream = mdox({
         src: __dirname + "/fixtures/existing.md",
         name: "existing.md",
@@ -79,17 +79,16 @@ describe("mdox", function () {
       .on("error", function (err) {
         error = err;
       })
-      .write(new gutil.File({
+      .on("data", function (file) {
+        file.contents.pipe(es.through(function (contents) {
+          // Pipe to through stream to fully resolve.
+          expect(error).to.not.be.ok;
+          expect(contents).to.equal(expectedExisting);
+          done(error);
+        }));
+      })
+      .end(new gutil.File({
         contents: new Buffer(fixtureJs)
-      }));
-
-    stream
-      .pipe(es.through(function (file) {
-        // Pipe to through stream to fully resolve.
-        expect(error).to.not.be.ok;
-        console.log(file.contents.toString());
-        //expect(file.contents.toString()).to.equal(expectedExisting);
-        done(error);
       }));
   });
 });
