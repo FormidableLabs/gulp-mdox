@@ -1,0 +1,14 @@
+### <%= heading %>
+<% _.each(tags, function (t) { %>
+  <% if (t.type === 'param') { %>
+    * **<%= t.name %>** (`<%= t.types.join('|') %>`) <%= t.description %>
+  <% } else if (t.type === 'returns') { %>
+    * **_<%= t.type %>_** <%= t.string %>
+  <% } %>
+<% }); %>
+<%= description.full %>
+<% _.each(tags, function (t) { %>
+  <% if (t.type === 'see') { %>
+    See: [<%= t.url %>](<%= t.url %>)
+  <% } %>
+<% }); %>

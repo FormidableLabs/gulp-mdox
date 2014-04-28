@@ -13,3 +13,10 @@ npm install --save-dev gulp-mdox
 ## Example - TODO
 
 ## API - TODO (USE TOOL!!!)
+
+## Other Tools
+
+Other alternative tools:
+
+* [gulp-markdox](https://github.com/gberger/gulp-markdox):
+  [markdox](https://github.com/cbou/markdox) plugin for gulp
