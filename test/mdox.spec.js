@@ -1,4 +1,5 @@
 var fs = require("fs"),
+  es = require("event-stream"),
 
   chai = require("chai"),
   expect = chai.expect,
@@ -11,9 +12,8 @@ var fs = require("fs"),
   },
 
   fixtureJs = _readFixture("fixtures/test.js"),
-  //fixtureExisting = _readFixture("fixtures/existing.md"),
-  expectedTest = _readFixture("expected/test.md");
-  //expectedExisting = _readFixture("expected/existing.md");
+  expectedTest = _readFixture("expected/test.md"),
+  expectedExisting = _readFixture("expected/existing.md");
 
 describe("mdox", function () {
 
@@ -22,19 +22,19 @@ describe("mdox", function () {
         name: "nowhere.md"
       }),
       count = 0,
-      err;
+      error;
 
     stream
       .on("error", function (err) {
-        err = err;
+        error = err;
       })
       .on("data", function (file) {
         count++;
         expect(file.contents.toString()).to.equal("");
       })
       .on("end", function () {
-        expect(err).to.not.be.ok;
-        done(err);
+        expect(error).to.not.be.ok;
+        done(error);
       })
       .end(new gutil.File({
         path: "nowhere.md",
@@ -47,47 +47,49 @@ describe("mdox", function () {
         name: "test.md"
       }),
       count = 0,
-      err;
+      error;
 
     stream
       .on("error", function (err) {
-        err = err;
+        error = err;
       })
       .on("data", function (file) {
         count++;
         expect(file.contents.toString()).to.equal(expectedTest);
       })
       .on("end", function () {
-        expect(err).to.not.be.ok;
-        done(err);
+        expect(error).to.not.be.ok;
+        done(error);
       })
       .end(new gutil.File({
         contents: new Buffer(fixtureJs)
       }));
   });
 
-  // it("should render JS to existing file", function (done) {
-  //   var stream = mdox({
-  //       src: __dirname + "/fixtures/existing.md",
-  //       name: "existing.md"
-  //     }),
-  //     count = 0,
-  //     err;
+  it.skip("should render JS to existing file", function (done) {
+    var stream = mdox({
+        src: __dirname + "/fixtures/existing.md",
+        name: "existing.md",
+        start: "## Before",
+        end: "## After"
+      }),
+      error;
 
-  //   stream
-  //     .on("error", function (err) {
-  //       err = err;
-  //     })
-  //     .on("data", function (file) {
-  //       count++;
-  //       expect(file.contents.toString()).to.equal(expectedExisting);
-  //     })
-  //     .on("end", function (err) {
-  //       expect(err).to.not.be.ok;
-  //       done(err);
-  //     })
-  //     .end(new gutil.File({
-  //       contents: new Buffer(fixtureJs)
-  //     }));
-  // });
+    stream
+      .on("error", function (err) {
+        error = err;
+      })
+      .write(new gutil.File({
+        contents: new Buffer(fixtureJs)
+      }));
+
+    stream
+      .pipe(es.through(function (file) {
+        // Pipe to through stream to fully resolve.
+        expect(error).to.not.be.ok;
+        console.log(file.contents.toString());
+        //expect(file.contents.toString()).to.equal(expectedExisting);
+        done(error);
+      }));
+  });
 });
