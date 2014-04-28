@@ -1,0 +1,35 @@
+{
+  "name": "gulp-mdox",
+  "version": "0.0.1",
+  "description": "Convert and insert Markdown from JavaScript sources",
+  "main": "mdox.js",
+  "scripts": {
+    "test": "./node_modules/.bin/gulp check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FormidableLabs/gulp-mdox"
+  },
+  "keywords": [
+    "gulp",
+    "markdown",
+    "documentation",
+    "api"
+  ],
+  "author": {
+    "name": "Ryan Roemer",
+    "email": "ryan.roemer@formidablelabs.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FormidableLabs/gulp-mdox/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "gulp-jshint": "1.5.5",
+    "gulp": "3.6.2",
+    "chai": "1.9.1",
+    "gulp-mocha": "0.4.1"
+  }
+}
