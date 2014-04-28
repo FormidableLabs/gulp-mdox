@@ -104,6 +104,11 @@ var _generateMdApi = function (obj) {
     .value()
     .join("");
 
+  // No Output if not sections.
+  if (!sections) {
+    return "";
+  }
+
   return "\n" + toc.join("") + "\n" + sections;
 };
 
