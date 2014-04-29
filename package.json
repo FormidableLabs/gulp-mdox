@@ -1,6 +1,6 @@
 {
   "name": "gulp-mdox",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Convert and insert Markdown from JavaScript sources",
   "main": "mdox.js",
   "scripts": {
