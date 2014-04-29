@@ -10,6 +10,10 @@ Say hello.
 
 Say your name and age.
 
+```html
+<em>Hello!</em>
+```
+
 See: [http://example.com](http://example.com)
 
 ### `goodbye(name)`

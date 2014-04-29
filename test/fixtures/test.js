@@ -4,6 +4,10 @@
  *
  * Say your name and age.
  *
+ * ```html
+ * <em>Hello!</em>
+ * ```
+ *
  * @param {String} name Your name.
  * @param {Number} age  Your age. (_optional_)
  * @see http://example.com
