@@ -41,7 +41,7 @@ file.
 
 ## API
 
-* [`exports(opts)`](#exports-opts-)
+* [`exports(opts)`](#exportsopts)
 
 ### `exports(opts)`
 * **opts** (`Object`) Options
@@ -49,6 +49,7 @@ file.
 * **opts.src** (`String`) Input source markdown file. (_optional_)
 * **opts.start** (`String`) Start marker. (_optional_)
 * **opts.end** (`String`) End marker. (_optional_)
+* **opts.github** (`Boolean`) Use GitHub headings? (_optional_)
 
 JsDoc-to-Markdown plugin.
 

@@ -36,8 +36,9 @@ var _getTmpl = _.memoize(function () {
  *
  * @param {Object} obj Objectified underlying data.
  */
-var Section = function (data) {
+var Section = function (data, opts) {
   this.data = data;
+  this.opts = opts || {};
   this.tmpl = _getTmpl();
 };
 
@@ -72,7 +73,18 @@ Section.prototype.heading = _.memoize(
   Section.prototype.heading, function () { return this.data.ctx.name; });
 
 Section.prototype.headingId = function () {
-  return this.heading().toLowerCase().replace(/[^\w]+/g, "-");
+  var heading = this.heading().toLowerCase();
+
+  if (this.opts.github) {
+    // GH strips characters that other MD processors don't.
+    return heading
+      .split(" ")
+      .map(function (part) { return part.replace(/[^\w]+/g, ""); })
+      .join("-");
+  } else {
+    // Normal.
+    return heading.replace(/[^\w]+/g, "-");
+  }
 };
 
 Section.prototype.renderToc = function () {
@@ -91,13 +103,13 @@ Section.prototype.renderSection = function () {
 /**
  * Generate MD API from `dox` object.
  */
-var _generateMdApi = function (obj) {
+var _generateMdApi = function (obj, opts) {
   var toc = [];
 
   // Finesse comment markdown data.
   // Also, statefully create TOC.
   var sections = _.chain(obj)
-    .map(function (data) { return new Section(data); })
+    .map(function (data) { return new Section(data, opts); })
     .filter(function (s) { return s.isPublic(); })
     .map(function (s) {
       toc.push(s.renderToc());  // Add to TOC.
@@ -119,11 +131,12 @@ var _generateMdApi = function (obj) {
  *
  * Extract JsDoc comments and convert to Markdown.
  *
- * @param {Object} opts       Options
- * @param {String} opts.name  Output file name.
- * @param {String} opts.src   Input source markdown file. (_optional_)
- * @param {String} opts.start Start marker. (_optional_)
- * @param {String} opts.end   End marker. (_optional_)
+ * @param {Object}  opts        Options
+ * @param {String}  opts.name   Output file name.
+ * @param {String}  opts.src    Input source markdown file. (_optional_)
+ * @param {String}  opts.start  Start marker. (_optional_)
+ * @param {String}  opts.end    End marker. (_optional_)
+ * @param {Boolean} opts.github Use GitHub headings? (_optional_)
  * @api public
  */
 module.exports = function (opts) {
@@ -131,7 +144,8 @@ module.exports = function (opts) {
   opts = _.extend({
     src: null,
     start: null,
-    end: null
+    end: null,
+    github: false
   }, opts);
 
   // Validate.
@@ -157,7 +171,7 @@ module.exports = function (opts) {
     // END: Convert to Markdown format and pass on to destination stream.
     toDocs: function () {
       var data = dox.parseComments(convert._buffer.toString(), { raw: true });
-      var mdApi = _generateMdApi(data);
+      var mdApi = _generateMdApi(data, opts);
 
       // Just use MD straight up if no destination insertion.
       var contents = opts.src ?

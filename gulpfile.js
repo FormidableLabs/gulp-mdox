@@ -53,7 +53,8 @@ gulp.task("docs", function () {
       src: "./README.md",
       name: "README.md",
       start: "## API",
-      end: "## Other Tools"
+      end: "## Other Tools",
+      github: true
     }))
     .pipe(gulp.dest("./"));
 });
