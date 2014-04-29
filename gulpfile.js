@@ -63,5 +63,6 @@ gulp.task("docs", function () {
 // ----------------------------------------------------------------------------
 // Aggregated Tasks
 // ----------------------------------------------------------------------------
+gulp.task("build",      ["docs"]);
 gulp.task("check",      ["jshint", "test"]);
-gulp.task("default",    ["check"]);
+gulp.task("default",    ["check", "build"]);

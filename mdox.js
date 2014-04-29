@@ -104,7 +104,7 @@ var _generateMdApi = function (obj) {
       return s.renderSection(); // Render section.
     })
     .value()
-    .join("");
+    .join("\n");
 
   // No Output if not sections.
   if (!sections) {
@@ -162,7 +162,7 @@ module.exports = function (opts) {
       // Just use MD straight up if no destination insertion.
       var contents = opts.src ?
         convert.insertTextStream(mdApi) :
-        new Buffer(mdApi);
+        new Buffer(mdApi ? mdApi + "\n" : "");
 
       this.emit("data", new gutil.File({
         path: opts.name,
