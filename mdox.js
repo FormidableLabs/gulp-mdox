@@ -161,8 +161,8 @@ module.exports = function (opts) {
 
       // Just use MD straight up if no destination insertion.
       var contents = opts.src ?
-        convert.insertTextStream(mdApi) :
-        new Buffer(mdApi ? mdApi + "\n" : "");
+        convert.insertTextStream(mdApi + "\n") :
+        new Buffer(mdApi);
 
       this.emit("data", new gutil.File({
         path: opts.name,

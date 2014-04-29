@@ -83,6 +83,8 @@ describe("mdox", function () {
         file.contents.pipe(es.through(function (contents) {
           // Pipe to through stream to fully resolve.
           expect(error).to.not.be.ok;
+          // NOTE: There's one extra "\n" from what happens with actual
+          // gulp task pipe (like for the README.md).
           expect(contents).to.equal(expectedExisting);
           done(error);
         }));

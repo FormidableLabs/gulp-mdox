@@ -53,6 +53,7 @@ file.
 JsDoc-to-Markdown plugin.
 
 Extract JsDoc comments and convert to Markdown.
+
 ## Other Tools
 
 Other alternative tools:

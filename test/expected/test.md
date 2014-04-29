@@ -21,4 +21,3 @@ Say goodbye.
 Say your name and age.
 
 See: [http://example.com](http://example.com)
-
