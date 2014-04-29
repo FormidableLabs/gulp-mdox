@@ -48,9 +48,7 @@ gulp.task("test", function () {
 // ----------------------------------------------------------------------------
 gulp.task("docs", function () {
   gulp
-    .src([
-      "mdox.js"
-    ])
+    .src("mdox.js")
     .pipe(mdox({
       src: "./README.md",
       name: "README.md",
