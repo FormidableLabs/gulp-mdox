@@ -1,6 +1,7 @@
 
 * [`hello(name, [age])`](#hello-name-age-)
 * [`goodbye(name)`](#goodbye-name-)
+* [`noArgs`](#noargs)
 
 ### `hello(name, [age])`
 * **name** (`String`) Your name.
@@ -25,3 +26,7 @@ Say goodbye.
 Say your name and age.
 
 See: [http://example.com](http://example.com)
+
+### `noArgs`
+
+No args.

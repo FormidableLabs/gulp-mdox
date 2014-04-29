@@ -30,3 +30,12 @@ var hello = function (name, age) {
 var goodbye = function (name) {
   return "Goodbye " + name + "!";
 };
+
+/**
+ * No args.
+ *
+ * @api public
+ */
+var noArgs = function () {
+  return "No arguments!";
+};
